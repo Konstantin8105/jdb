@@ -14,22 +14,21 @@ type Db[T any] struct {
 	vs       []T
 }
 
-func Open[T any](filename string) (_ *Db[T], err error) {
-	db := Db[T]{}
+func Open[T any](filename string) (db *Db[T], err error) {
+	db = new(Db[T])
 	db.filename = filename
 
 	var dat []byte
 	dat, err = os.ReadFile(filename)
 	if err != nil {
-		// ignore error
-		err = nil
-	} else {
-		err = json.Unmarshal(dat, &db.vs)
-		if err != nil {
-			return
-		}
+		err = nil // ignore
+		return
 	}
-	return &db, err
+	err = json.Unmarshal(dat, &db.vs)
+	if err != nil {
+		return
+	}
+	return
 }
 
 func (db *Db[T]) Add(v T) {

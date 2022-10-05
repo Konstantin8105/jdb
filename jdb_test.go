@@ -61,3 +61,9 @@ func Test(t *testing.T) {
 
 	isSame(db2.Get())
 }
+
+func TestFail(t *testing.T){
+	if _, err := jdb.Open[Animal]("wrong"); err != nil {
+		t.Fatal("Open wrong")
+	}
+}
